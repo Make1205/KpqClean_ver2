@@ -1,0 +1,21 @@
+{
+  "scale": "QUICK",
+  "benchmark_commit": "34046d35956e55efd6079aea22ecab5de843400e",
+  "tested_commit": "34046d35956e55efd6079aea22ecab5de843400e",
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
+  "gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+  "flags": [
+    "-O3",
+    "-march=native",
+    "-std=c99"
+  ],
+  "timing_iterations": 11,
+  "correctness_signatures": 100,
+  "length_samples": 100,
+  "timing_warmup": 20,
+  "message_bytes": 32,
+  "key_input": "bytes",
+  "fresh_keys_per_timing_sample": true,
+  "affinity": 0,
+  "status": "COMPLETED"
+}

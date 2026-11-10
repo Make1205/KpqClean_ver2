@@ -118,3 +118,24 @@ QUICK summaries explicitly mark all numbers as format checks only.
 Cloud smoke validation: `QUICK=1 bash bench/run.sh` passed all three modes
 on tested driver commit dd621dfdc1f85f99918eeafb10c9c1c33aff7e70. Reports:
 `results/20261110T041647.856370Z-quick/`. No full-scale run was executed.
+
+
+## Fresh-key/warmup alignment and metadata (2026-11-10)
+
+The old driver already used a 32-byte message and encoded sk/pk, but timed
+separate loops on a reused key/signature, with one warmup per API. It did not
+satisfy the fresh-key/20-warmup convention. benchmark.c now times each native
+byte API in a fresh KeyGen/Sign/Verify triple and discards 20 whole triples.
+It resets the timed message to 32 zero bytes after correctness tests. Original
+RNG calls, algorithm sources, KATs and length parsing are unchanged. Both
+HAETAE repositories share this exact timing driver. CPU affinity is now the
+first allowed logical CPU. FULL is 10001 timings and 10000 correctness/length
+signatures per mode; QUICK is 11/100. Native KAT remains 100 cases.
+
+metadata.json records scale, counts, warmup=20, message_bytes=32, key_input=bytes,
+fresh_keys_per_timing_sample=true, affinity, compiler, flags and source commit.
+The older KpqClean FULL result has no metadata.json; it is still a genuine FULL
+run, but its one-warmup/reused-key protocol must be labeled legacy, not silently
+reclassified as the new convention. The shared collector infers legacy scale
+only from an explicit FULL header plus 10001 timing_samples in bench.csv;
+QUICK and inventory-only output are never promoted. New runs record status.

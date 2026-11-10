@@ -55,31 +55,19 @@ int main(int argc, char **argv) {
            HAETAE_N, HAETAE_Q, CRYPTO_PUBLICKEYBYTES, CRYPTO_BYTES,
            nc, nl, (double)total / nl, max);
 
-    uint64_t *t = calloc(nt + 1, sizeof *t);
-    require(t != NULL, "timer allocation");
-    /* Warm up each API outside measured samples. Sign and Verify always receive
-     * serialized keys; all unpacking and OS randomness remain inside the API. */
-    for (int op = 0; op < 3; ++op) {
-        require(!crypto_sign_keypair(pk, sk), "warmup keypair");
-        require(!crypto_sign_signature(sig, &siglen, msg, sizeof msg, NULL, 0, sk), "warmup sign");
-        require(!crypto_sign_verify(sig, siglen, msg, sizeof msg, NULL, 0, pk), "warmup verify");
-        t[0] = 0;
-        for (size_t i = 0; i < nt; ++i) {
-            uint64_t start = cpucycles();
-            int rc;
-            if (op == 0) rc = crypto_sign_keypair(pk, sk);
-            else if (op == 1) rc = crypto_sign_signature(sig, &siglen, msg, sizeof msg, NULL, 0, sk);
-            else rc = crypto_sign_verify(sig, siglen, msg, sizeof msg, NULL, 0, pk);
-            uint64_t end = cpucycles();
-            require(!rc, "timed API");
-            /* Reconstruct consecutive timestamps from independent intervals for
-             * unchanged print_results (which differences N+1 timestamps). */
-            t[i + 1] = t[i] + end - start;
-        }
-        print_results(op == 0 ? "KeyGen" : op == 1 ? "Sign" : "Verify", t, nt + 1);
-        if (op == 0) require(!crypto_sign_signature(sig, &siglen, msg, sizeof msg, NULL, 0, sk), "prepare signature");
-        require(!crypto_sign_verify(sig, siglen, msg, sizeof msg, NULL, 0, pk), "post-timing verify");
+    uint64_t *kg = calloc(nt + 1, sizeof *kg), *sg = calloc(nt + 1, sizeof *sg), *vf = calloc(nt + 1, sizeof *vf);
+    require(kg && sg && vf, "timer allocation");
+    memset(msg, 0, sizeof msg);
+    for (size_t i = 0; i < nt + 20; ++i) {
+        uint64_t a = cpucycles();int rc = crypto_sign_keypair(pk, sk);uint64_t dk = cpucycles()-a;
+        require(!rc, "timed keypair");
+        a=cpucycles();rc=crypto_sign_signature(sig,&siglen,msg,sizeof msg,NULL,0,sk);uint64_t ds=cpucycles()-a;
+        require(!rc, "timed sign");
+        a=cpucycles();rc=crypto_sign_verify(sig,siglen,msg,sizeof msg,NULL,0,pk);uint64_t dv=cpucycles()-a;
+        require(!rc, "timed verify");
+        if(i>=20){size_t j=i-20;kg[j+1]=kg[j]+dk;sg[j+1]=sg[j]+ds;vf[j+1]=vf[j]+dv;}
     }
-    free(t);
+    print_results("KeyGen",kg,nt+1);print_results("Sign",sg,nt+1);print_results("Verify",vf,nt+1);
+    free(kg);free(sg);free(vf);
     return 0;
 }

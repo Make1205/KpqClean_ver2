@@ -1,0 +1,4 @@
+parameter,n,q,pk_bytes,sig_fixed_bytes,correctness_signatures,length_samples,encoded_mean_bytes,encoded_max_bytes,run,paper_mean_bytes,timing_samples,kat_records,code_commit,encoded_minus_paper,keygen_kcycles,sign_kcycles,verify_kcycles,avx2_keygen,avx2_sign,avx2_verify
+haetae_mode2,256,64513,992,1474,100,100,1468.340000,1474,QUICK,1463,11,100,34046d35956e55efd6079aea22ecab5de843400e,5.340000,448.421,2693.781,135.459,--,--,--
+haetae_mode3,256,64513,1472,2349,100,100,2344.110000,2347,QUICK,2337,11,100,34046d35956e55efd6079aea22ecab5de843400e,7.110000,1153.697,3306.315,230.697,--,--,--
+haetae_mode5,256,64513,2080,2948,100,100,2943.700000,2947,QUICK,2908,11,100,34046d35956e55efd6079aea22ecab5de843400e,35.700000,720.433,3454.229,280.643,--,--,--

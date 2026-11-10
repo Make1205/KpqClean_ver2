@@ -1,0 +1,13 @@
+data,haetae_mode3,256,64513,1472,2349,100,100,2344.110000,2347
+KeyGen
+median: 1153697 cycles/ticks
+average: 1519384 cycles/ticks
+
+Sign
+median: 3306315 cycles/ticks
+average: 4122027 cycles/ticks
+
+Verify
+median: 230697 cycles/ticks
+average: 243458 cycles/ticks
+
