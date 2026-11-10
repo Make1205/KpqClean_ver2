@@ -1,0 +1,4 @@
+parameter,n,q,pk_bytes,sig_buffer_bytes,signatures,sig_average_bytes,sig_min_bytes,sig_max_bytes
+haetae_mode2,256,64513,992,1474,10000,1474.000000,1474,1474
+haetae_mode3,256,64513,1472,2349,10000,2349.000000,2349,2349
+haetae_mode5,256,64513,2080,2948,10000,2948.000000,2948,2948

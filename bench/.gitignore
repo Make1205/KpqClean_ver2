@@ -1,0 +1,5 @@
+# Retain small audit reports; do not commit executables or secret-key KAT vectors.
+results/**/inventory-[235]
+results/**/kat-[235]
+results/**/*.req
+results/**/*.rsp
