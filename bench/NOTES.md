@@ -114,3 +114,7 @@ Outputs: bench/results/<UTC timestamp>-quick or -full/SUMMARY.md and bench.csv,
 plus build/run logs and metadata. KAT vectors include generated test keys and
 stay local, as do binaries; small cloud smoke-test reports are committed.
 QUICK summaries explicitly mark all numbers as format checks only.
+
+Cloud smoke validation: `QUICK=1 bash bench/run.sh` passed all three modes
+on tested driver commit dd621dfdc1f85f99918eeafb10c9c1c33aff7e70. Reports:
+`results/20261110T041647.856370Z-quick/`. No full-scale run was executed.

@@ -1,8 +1,6 @@
-# Local generated binaries and KAT vectors; retain small reports and metadata.
-results/**/benchmark-2
-results/**/benchmark-3
-results/**/benchmark-5
-results/**/kat-2
-results/**/kat-3
-results/**/kat-5
-results/**/kat-mode*/
+# Retain small audit reports; do not commit executables or test-key KAT vectors.
+results/**/inventory-[235]
+results/**/benchmark-[235]
+results/**/kat-[235]
+results/**/*.req
+results/**/*.rsp
