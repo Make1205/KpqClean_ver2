@@ -78,15 +78,39 @@ small logs and reports are retained. `inventory.sh` requires bash, Python >=3.8
 standard library, GCC, Git, and normal base-system tools; no sudo or network.
 All commands inherit `LANG=C` and `LC_ALL=C`. Output directory names use UTC.
 
-## Stop condition and remaining work
+## Benchmark continuation (authorized after the inventory gate)
 
-This is the requested step-2 gate, not a completed performance benchmark.
-The public API's signature lengths differ from all three supplied paper means.
-After saving and pushing the inventory, pause for the user's decision.
-Do not change parameters or silently benchmark a different serialization.
+The user authorized continuing from 326c4a930332aed09485ecb95c150927dee78bea
+while retaining the fixed API serialization. The earlier size-mismatch pause
+is superseded. Algorithm sources and other schemes remain unchanged.
 
-Pending that decision: copying the four unmodified Dilithium timer files from
-commit `bba9534`, 10,001-sample median timing, the full `bench/run.sh`, and
-`bench.csv`. No timing values are fabricated in the inventory summary.
+Run `LANG=C bash bench/run.sh` with QUICK unset for full scale. This uses
+10001 timed calls per operation, 30000 correctness signatures per mode, and
+10000 length samples per mode. `QUICK=1 LANG=C bash bench/run.sh` uses 11,
+100, and 100 respectively, and is the only scale executed in the cloud.
+The unchanged KAT generator always emits 100 records per mode.
 
-To reproduce this inventory after checkout: `bash bench/inventory.sh`.
+The new driver reads exact compressed lengths from the two serialized length
+offsets at N/8+L*N, adds both encoding baselines and the fixed prefix, and
+checks that all bytes after the computed boundary are zero. This is more
+precise than scanning backwards through zeros, which could discard valid
+encoded zeros. The API still signs and verifies the full padded buffer.
+
+The four Dilithium bba9534 timer files are vendored unchanged under
+bench/dilithium with provenance and SHA-256 hashes. Independent start/end
+intervals are accumulated into N+1 timestamps for unchanged speed_print,
+which differences exactly N samples, subtracts its overhead, and reports the
+median. RDTSC ticks are reported as kilocycles with the TSC caveat in SUMMARY.
+Sign/Verify call the public API on byte-form sk/pk, including unpacking.
+
+Only bash, Python >=3.8 standard library, installed GCC and Git are needed;
+Linux /proc supplies CPU metadata and the unchanged timer requires x86-64.
+No network, sudo, CPU configuration, dependency installation, or environment
+configuration changes occur in the run script. LANG=C and LC_ALL=C are
+inherited by all child commands. Exact compiler arguments, GCC version, CPU
+information, HEAD, working-tree status and driver hashes are retained.
+
+Outputs: bench/results/<UTC timestamp>-quick or -full/SUMMARY.md and bench.csv,
+plus build/run logs and metadata. KAT vectors include generated test keys and
+stay local, as do binaries; small cloud smoke-test reports are committed.
+QUICK summaries explicitly mark all numbers as format checks only.
